@@ -1,0 +1,47 @@
+<include file="Public:header"/>
+
+<include file="Public:navigation"/>
+
+<include file="Public:left"/>
+
+<link href="__STATICURL__/bootstrap/plugin/datepicker/css/bootstrap-datepicker.css" rel="stylesheet" media="screen">
+<script type="text/javascript" src="__STATICURL__/bootstrap/plugin/datepicker/js/bootstrap-datepicker.js" charset="UTF-8"></script>
+<script type="text/javascript" src="__STATICURL__/bootstrap/plugin/datepicker/js/locales/bootstrap-datepicker.zh-CN.min.js" charset="UTF-8"></script>
+
+<div class="col-sm-9 col-sm-offset-3 col-md-11 col-md-offset-1 main">
+    <div class="search form-inline form-group">
+        <div style="float:left;">
+            <?php
+               $NavBar[] = array('name'=>'日历管理');
+                $NavBar[] = array('name'=>'事件成员');
+                $NavBar[] = array('name'=>'{$vo.name}');
+                echo HtmlNavBar($NavBar);
+            ?>
+        </div>
+        <div style="float:right;">
+            <a class="btn btn-primary" href="<?php echo CmMkurl('?m=constitute&a=insert');?>" role="button">添加事件</a>
+        </div>
+    </div>
+</div>
+<div class="col-sm-9 col-sm-offset-3 col-md-11 col-md-offset-1 main" style="font-family: 幼圆;font-size: 16px;">
+<table class="table">
+    <tr>
+        <th>ID</th><th>名称</th><th>LOGO</th><th>所属父类别</th><th>操作</th>
+    </tr>
+
+    <foreach name="ConstList" item="vo">
+        <tr>
+            <td>{$vo.id}</td>
+            <td><a href="<?php echo CmMkurl('?m=constitute&a=index&id='.$vo['id']); ?>" id="addNav">{$vo.name}</a></td>
+            <td><img src="{$vo.logourl}" style="width:50px"/></td>
+            <td>{$vo.parentname}</td>
+            <td><a href="<?php echo CmMkurl('?m=constitute&a=update&id='.$vo['id']); ?>">修改</a>&nbsp;&nbsp;&nbsp;
+                <a href="<?php echo CmMkurl('?m=constitute&a=Constitute_del&id='.$vo['id']); ?>">删除</a></td>
+        </tr>
+    </foreach>
+</table>
+</div>
+<script>
+
+</script>
+<include file="Public:footer"/>

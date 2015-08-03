@@ -1,0 +1,156 @@
+
+
+<include file="Public:header"/>
+
+<include file="Public:navigation"/>
+
+<include file="Public:left"/>
+
+<div class="col-sm-9 col-sm-offset-3 col-md-11 col-md-offset-1 main">
+    <div class="search form-inline form-group">
+        <div style="float:left;">
+            <?php
+           $NavBar[] = array('name'=>'日历管理');
+            $NavBar[] = array('name'=>'事件成员','url'=>'?m=constitute&a=index');
+            $NavBar[] = array('name'=>'添加');
+            echo HtmlNavBar($NavBar);
+            ?>
+        </div>
+        <div style="float:right;">
+        </div>
+    </div>
+
+    <div class="form-horizontal" style="margin-top:60px;">
+
+        <form method="post" action="<?php echo CmMkurl('?m=Constitute&a=insSubmit');?>" enctype="multipart/form-data">
+
+            <div class="form-group">
+                <label class="col-sm-1 control-label"></label>
+                <div class="col-sm-1">
+                    <select class="form-control SelectConst">
+                        <option selected="selected">--</option>
+                        <foreach name="ConstList" item="vo">
+                            <option value="{$vo.id}">{$vo.name}</option>
+                        </foreach>
+                    </select>
+                </div>
+
+
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-1 control-label" for="name">名称</label>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control"  placeholder="名称" name="name" id="name"/>
+                </div>
+            </div>
+
+            <div class="form-group" id="RecIdShow">
+                <label class="col-sm-1 control-label" id="RecTitleText">所属订阅源</label>
+                <div class="col-sm-1">
+                    <input type="text" type="text" class="form-control" id="conItemId"  placeholder="ID" name="itme_id" />
+                </div>
+                <div class="col-sm-1">
+                    <input type="text" type="text" class="form-control" id="conItemName" />
+                </div>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" placeholder="搜索" id="search" autocomplete="off" />
+                    <div style="position: absolute;  z-index: 1; background: #fff; width:92% ; border:1px solid #ccc; display: none;" id="SearchShow" >
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label  class="col-sm-1 control-label" for="logo" >LOGO</label>
+                <div class="col-sm-5">
+                    <input type="file" id="logo" name="logo" />
+                    <p class="help-block">图片大小应为132x132 </p>
+                </div>
+            </div>
+            <div class="col-sm-6 control-label">
+                <input type="hidden" name="parentid" value="0" id="ParentidHide"/>
+                <button type="submit" class="btn btn-primary">提交</button>
+            </div>
+        </form>
+
+    </div>
+
+</div>
+<script>
+    $(function(){
+        $("#conItemId").keyup(function(){
+//            alert($(this).val());
+            $.ajax({
+                type:"post",
+                url:"<?php echo CmMkurl('?m=Constitute&a=conIdToNameAjax');?>",
+                data:"conItemId="+$(this).val(),
+                success:function(msg){
+                    if (msg == 0) {
+                        $("#conItemName").val('');
+                    }else{
+                        $("#conItemName").val(msg);
+                    }
+                }
+            });
+        });
+
+        $("#search").keyup(function(){
+            $.ajax({
+                type:"post",
+                url:"<?php echo CmMkurl('?m=Constitute&a=conSearchNameAjax');?>",
+                data:"search="+$(this).val(),
+                success:function(msg){
+                    $('#SearchShow').show();
+                    $("#SearchShow").html(msg);
+                }
+            });
+        });
+
+        $("#SearchShow").on({
+            "mouseout": function () {
+                $(this).css('background-color','#FFF');
+            },
+            "mouseover": function(){
+                $(this).css('background-color','#F5F5F5');
+            },
+            "click": function () {
+                $('#conItemId').val($(this).attr('Sid'));
+                $('#conItemName').val($(this).text());
+                $('#SearchShow').hide();
+                $('#search').val($(this).text());
+            }
+        }, "p");
+        $(document).on('click','body',function(){$('#SearchShow').hide();});
+//        $('#conItemId').trigger('keyup');
+//        $('#pId').change(function(){
+//            $.ajax({
+//                type:'post',
+//                url:"<?php echo CmMkurl('?m=Constitute&a=conParNameAjax');?>",
+//                data:"pId="+$(this).val(),
+//                success:function(msg){
+//                    if(msg!=0){
+//                        $("#parNameShow").show();
+//                        $("#parNameShow").html(msg);
+//                    }else{
+//                        $("#parNameShow").hidden();
+//                    }
+//                }
+//            });
+//        });
+
+        $(document).on('change','.SelectConst',function(){
+            var ThisObj = $(this).parent();
+            ThisObj.nextAll().remove();
+            $('#ParentidHide').val( $(this).val() );
+            $.ajax({
+                type:'post',
+                url:"<?php echo CmMkurl('?m=Constitute&a=conParNameAjax');?>",
+                data:"pId="+$(this).val(),
+                success:function(msg){
+                    ThisObj.after(msg)
+                }
+            });
+        });
+    });
+</script>
+<include file="Public:footer"/>

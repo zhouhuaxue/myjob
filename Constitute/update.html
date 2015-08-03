@@ -1,0 +1,76 @@
+
+
+<include file="Public:header"/>
+
+<include file="Public:navigation"/>
+
+<include file="Public:left"/>
+
+<div class="col-sm-9 col-sm-offset-3 col-md-11 col-md-offset-1 main">
+    <div class="search form-inline form-group">
+        <div style="float:left;">
+            <?php
+           $NavBar[] = array('name'=>'日历管理');
+            $NavBar[] = array('name'=>'事件成员','url'=>'?m=constitute&a=index');
+            $NavBar[] = array('name'=>'修改');
+            echo HtmlNavBar($NavBar);
+            ?>
+        </div>
+        <div style="float:right;">
+        </div>
+    </div>
+
+    <div class="form-horizontal" style="margin-top:60px;">
+
+        <form method="POST" action="<?php echo CmMkurl('?m=Constitute&a=update');?>" enctype="multipart/form-data">
+            <div class="form-group">
+                <label class="col-sm-1 control-label"></label>
+                <div class="col-sm-1">
+                    <select class="form-control" name="conPid" >
+                        <option selected="selected">{$con_info['parentid']}</option><!--此处需要对值进行判断-->
+                        <foreach name="conPid0" item="conPid0">
+                            <option>{$conPid0['name']}</option>
+                        </foreach>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-1 control-label" for="con_name">名称</label>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" id="con_name" placeholder="名称" value="{$con_info['name']}" name="conName"/>
+                </div>
+            </div>
+
+            <div class="form-group" id="RecIdShow">
+                <label class="col-sm-1 control-label"  id="RecTitleText">所属订阅源</label>
+                <div class="col-sm-1">
+                    <input type="text" type="text" class="form-control"  value="{$con_info['itemid']}"/>
+                </div>
+                <div class="col-sm-1">
+                    <input type="text" type="text" class="form-control"/>
+                </div>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" id="AjaxSearchName" placeholder="搜索"  name="AjaxSearchName"/>
+                    <div style="position: absolute;  z-index: 1; background: #fff; width:90% ; border:1px solid #ccc;display:none" id='AjaxSearchShow'></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label  class="col-sm-1 control-label" for="exampleInputFile" >LOGO</label>
+                <div class="col-sm-2">
+                    <img src="{$GroupInfo['group_banner_url']}" />
+                </div>
+                <div class="col-sm-3">
+                    <input type="file" id="exampleInputFile" name="group_icon">
+                    <p class="help-block">图片大小应为180x180 , 如果无需修改,请勿选择文件</p>
+                </div>
+            </div>
+            <div class="col-sm-6 control-label">
+                <button type="submit" class="btn btn-primary">提交</button>
+            </div>
+        </form>
+
+    </div>
+
+</div>
+
+<include file="Public:footer"/>
